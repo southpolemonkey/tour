@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singapore Trip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-family: 'Times New Roman', Times, serif
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .grid-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .grid-item img:hover {
+            transform: scale(1.03);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            overflow: auto;
+        }
+        .modal-content {
+            display: block;
+            margin: auto;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-caption {
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Singapore Trip</h1>
+    <div class="grid-container">
+        <div class="grid-item">
+            <img src="day1.png" alt="Day 1: Marina Bay Magic" data-day="Day 1: Marina Bay Magic">
+        </div>
+        <div class="grid-item">
+            <img src="day2.png" alt="Day 2: Cultural Treasures" data-day="Day 2: Cultural Treasures">
+        </div>
+        <div class="grid-item">
+            <img src="day3.png" alt="Day 3: Wild Encounters" data-day="Day 3: Wild Encounters">
+        </div>
+        <div class="grid-item">
+            <img src="day4.png" alt="Day 4: Sentosa Thrills" data-day="Day 4: Sentosa Thrills">
+        </div>
+        <div class="grid-item">
+            <img src="day5.png" alt="Day 5: Local Flavors" data-day="Day 5: Local Flavors">
+        </div>
+        <div class="grid-item">
+            <img src="day6.png" alt="Day 6: Modern Marvels" data-day="Day 6: Modern Marvels">
+        </div>
+        <div class="grid-item">
+            <img src="day7.png" alt="Day 7: Farewell Singapore" data-day="Day 7: Farewell Singapore">
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption" class="modal-caption"></div>
+    </div>
+
+    <script>
+        // Get the modal
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const captionText = document.getElementById("caption");
+        const closeBtn = document.getElementsByClassName("close")[0];
+        
+        // Get all images with class grid-item img
+        const images = document.querySelectorAll(".grid-item img");
+        
+        // Add click event to each image
+        images.forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.getAttribute('data-day');
+                
+                // Disable scrolling on body when modal is open
+                document.body.style.overflow = "hidden";
+            }
+        });
+        
+        // Close the modal when clicking the × button
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+            // Re-enable scrolling
+            document.body.style.overflow = "auto";
+        }
+        
+        // Close the modal when clicking outside the image
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                // Re-enable scrolling
+                document.body.style.overflow = "auto";
+            }
+        }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" && modal.style.display === "block") {
+                modal.style.display = "none";
+                // Re-enable scrolling
+                document.body.style.overflow = "auto";
+            }
+        });
+    </script>
+</body>
+</html>
