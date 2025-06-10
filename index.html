@@ -75,6 +75,45 @@
             width: 100%;
             left: 0;
         }
+        
+        /* Navigation buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        .prev {
+            left: 20px;
+        }
+        .next {
+            right: 20px;
+        }
+        
+        /* For small screens */
+        @media (max-width: 768px) {
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 18px;
+            }
+            .prev {
+                left: 10px;
+            }
+            .next {
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -108,6 +147,8 @@
         <span class="close">&times;</span>
         <img class="modal-content" id="modalImage">
         <div id="caption" class="modal-caption"></div>
+        <button class="nav-btn prev" id="prevBtn">&#10094;</button>
+        <button class="nav-btn next" id="nextBtn">&#10095;</button>
     </div>
 
     <script>
@@ -116,21 +157,44 @@
         const modalImg = document.getElementById("modalImage");
         const captionText = document.getElementById("caption");
         const closeBtn = document.getElementsByClassName("close")[0];
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
         
         // Get all images with class grid-item img
         const images = document.querySelectorAll(".grid-item img");
+        let currentIndex = 0;
         
         // Add click event to each image
-        images.forEach(img => {
+        images.forEach((img, index) => {
             img.onclick = function() {
-                modal.style.display = "block";
-                modalImg.src = this.src;
-                captionText.innerHTML = this.getAttribute('data-day');
-                
-                // Disable scrolling on body when modal is open
-                document.body.style.overflow = "hidden";
+                currentIndex = index;
+                openModal(currentIndex);
             }
         });
+        
+        // Function to open modal with specific image
+        function openModal(index) {
+            modal.style.display = "block";
+            modalImg.src = images[index].src;
+            captionText.innerHTML = images[index].getAttribute('data-day');
+            
+            // Disable scrolling on body when modal is open
+            document.body.style.overflow = "hidden";
+        }
+        
+        // Previous button click
+        prevBtn.onclick = function(event) {
+            event.stopPropagation(); // Prevent modal from closing
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            openModal(currentIndex);
+        }
+        
+        // Next button click
+        nextBtn.onclick = function(event) {
+            event.stopPropagation(); // Prevent modal from closing
+            currentIndex = (currentIndex + 1) % images.length;
+            openModal(currentIndex);
+        }
         
         // Close the modal when clicking the × button
         closeBtn.onclick = function() {
@@ -148,12 +212,18 @@
             }
         }
         
-        // Close modal with Escape key
+        // Keyboard navigation
         document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape" && modal.style.display === "block") {
-                modal.style.display = "none";
-                // Re-enable scrolling
-                document.body.style.overflow = "auto";
+            if (modal.style.display === "block") {
+                if (event.key === "ArrowLeft") {
+                    prevBtn.click();
+                } else if (event.key === "ArrowRight") {
+                    nextBtn.click();
+                } else if (event.key === "Escape") {
+                    modal.style.display = "none";
+                    // Re-enable scrolling
+                    document.body.style.overflow = "auto";
+                }
             }
         });
     </script>
